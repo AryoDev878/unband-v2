@@ -1,0 +1,822 @@
+
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>WΛR3VIVE | Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  audio {
+  display: none;
+}
+
+/* ---------- DARK GLES FINTECH CORE ---------- */
+:root{
+  --bg-dark:#020305;
+  --grad1:#0d1cff;
+  --grad2:#7c5cff;
+  --grad3:#060608;
+  --accent:#06f6d7;
+  --accent2:#7c5cff;
+  --muted:#98a0b3;
+  --mono:'Share Tech Mono', monospace;
+  --ui:'Inter',system-ui,sans-serif;
+  --blur:12px;
+}
+*{-webkit-font-smoothing:antialiased;box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:var(--ui);color:#e6eef6;overflow-x:hidden}
+/* ---------- animated gradient background ---------- */
+body{
+  background:linear-gradient(125deg,var(--bg-dark) 0%,var(--grad2) 50%,var(--bg-dark) 100%);
+  background-size:300% 300%;
+  animation:bgMove 18s ease infinite;
+}
+@keyframes bgMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+/* ---------- loading screen ---------- */
+
+/* ---------- topbar ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  padding: 8px 14px;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(var(--blur));
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.menu-btn {
+  font-size: 22px;
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.title-top {
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+  flex: 1;
+  text-align: center;
+}
+
+.account-container {
+  margin-left: auto;
+  position: relative;
+  font-size: 22px;
+  color: var(--accent);
+  cursor: pointer;
+  transition: color .2s;
+}
+
+.account-container:hover {
+  color: var(--accent2);
+}
+
+/* ---------- sidebar (solid dark) ---------- */
+.sidebar{
+  position:fixed;top:0;left:-260px;width:260px;height:100%;
+  background:#0c101665;
+  border-right:1px solid rgba(255,255,255,.08);
+  padding:70px 18px;transition:left .35s ease;z-index:1001;
+}
+.sidebar ul{list-style:none;padding:0;margin:0}
+.sidebar li{margin-bottom:12px}
+.sidebar a{
+  display:flex;align-items:center;
+  color:#e6eef6;text-decoration:none;font-size:15px;
+  padding:8px 6px;border-radius:6px;
+  transition:background .2s;
+}
+.sidebar a:hover{background:rgba(255,255,255,.05)}
+.sidebar a i{margin-right:10px;color:var(--accent);width:18px;text-align:center}
+.sidebar.active{left:0}
+.submenu{display:none;padding-left:20px;margin-top:6px}
+.submenu.show{display:block}
+
+/* ---------- account modal ---------- */
+.account-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  z-index: 1200;
+}
+
+.account-modal.active {
+  display: flex;
+}
+
+.account-card {
+  width: 320px;
+  padding: 20px;
+  text-align: center;
+}
+.account-card p {
+  font-family: var(--mono);
+  margin: 8px 0;
+}
+#logoutBtn {
+  margin-top: 16px;
+}
+/* Tombol X modal */
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.close-btn:hover {
+  color: var(--accent2);
+}
+
+
+/* ---------- overlay ---------- */
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);
+  display:none;z-index:1000;backdrop-filter:blur(4px)
+}
+.overlay.active{display:block}
+/* ---------- glass card ---------- */
+.glass-card{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  backdrop-filter:blur(var(--blur));
+  box-shadow:0 8px 32px rgba(0,0,0,.35);
+  transition:transform .3s ease,box-shadow .3s ease;
+}
+.glass-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.45)}
+.robot-box{
+  width:300px;margin:0 auto 18px;
+  padding:18px;text-align:center;
+}
+.robot-face{width:120px;height:120px;border-radius:50%;background:#000;margin:0 auto;box-shadow:0 0 20px rgba(0,0,0,.6)}
+.robot-title-normal{font-family:var(--ui);font-size:18px;font-weight:600;margin-top:10px}
+/* ---------- form ---------- */
+.form-label{font-size:12px;font-weight:500;margin:14px 0 6px;display:block;width:300px;margin-left:auto;margin-right:auto}
+.input,select,.btn{width:300px;margin:0 auto;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.25);color:#e6eef6;font-size:14px;outline:none;display:block;transition:border .2s}
+.input::placeholder{color:#7b8a97}
+.input:focus,select:focus{border-color:var(--accent)}
+.btn{
+  margin-top:20px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  border:0;color:#bad4e6;font-weight:800;font-size:15px;cursor:pointer;
+  position:relative;overflow:hidden;
+  transition:box-shadow .3s ease;
+}
+.btn:hover{box-shadow:0 0 18px rgba(6, 246, 215, 0.55)}
+.btn:active{transform:scale(.98)}
+.status{margin-top:12px;font-size:13px;color:var(--muted);min-height:20px;width:300px;margin-left:auto;margin-right:auto}
+.small{font-size:12px;color:var(--muted);margin-top:6px;width:300px;margin-left:auto;margin-right:auto;text-align:center}
+
+/* ---------- account icon + dropdown ---------- */
+.account-container {
+  margin-left: auto;
+  position: relative;
+  font-size: 22px;
+  color: var(--accent);
+  cursor: pointer;
+  transition: color .2s;
+}
+
+.account-container:hover {
+  color: var(--accent2);
+}
+
+.account-dropdown {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  width: 220px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  padding: 12px 14px;
+  display: none;
+  z-index: 1100;
+  font-size: 14px;
+  color: #e6eef6;
+}
+
+.account-dropdown.active {
+  display: block;
+  animation: fadeIn .3s ease;
+}
+
+.account-dropdown p {
+  margin: 4px 0;
+  font-family: var(--mono);
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(-8px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:860px){
+  .sidebar{width:220px}
+  .robot-box,.input,select,.btn,.status{width:94%;max-width:320px}
+}
+/* ---------- bottom navigation ---------- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 65px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  z-index: 1002;
+}
+
+.bottom-nav a {
+  text-decoration: none;
+  color: #b9c2d0;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all .3s ease;
+}
+
+.bottom-nav a i {
+  font-size: 18px;
+  transition: color .3s ease, text-shadow .3s ease;
+}
+
+.bottom-nav a.active,
+.bottom-nav a:hover {
+  color: rgba(6, 246, 215, 1);
+  text-shadow: 0 0 8px rgba(6, 246, 215, 0.55);
+}
+
+.bottom-nav a.active i,
+.bottom-nav a:hover i {
+  color: rgba(6, 246, 215, 1);
+  text-shadow: 0 0 10px rgba(6, 246, 215, 0.55);
+}
+
+/* Responsive tweak */
+@media (max-width:600px){
+  .bottom-nav span {
+    font-size: 12px;
+  }
+  .bottom-nav a i {
+    font-size: 17px;
+  }
+}
+
+/* ---------- popup general ---------- */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(6px);
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.popup-overlay.active {
+  opacity: 1;
+}
+
+.popup-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  width: 320px;
+  padding: 25px;
+  background: rgba(20,20,40,0.95);
+  border: 2px solid #7c5cff;
+  border-radius: 20px;
+  color: #fff;
+  text-align: center;
+  z-index: 9999;
+  box-shadow: 0 0 20px #7c5cff, 0 0 40px #7c5cff, 0 0 60px #06f6d7;
+  cursor: move;
+  font-family: 'Share Tech Mono', monospace;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.popup-card.active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.popup-card h3 {
+  margin-bottom: 15px;
+  color: #06f6d7;
+  text-shadow: 0 0 6px #06f6d7, 0 0 12px #7c5cff;
+}
+
+.popup-card p {
+  color: #ccc;
+  text-shadow: 0 0 3px #7c5cff;
+}
+
+.popup-card button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #7c5cff;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  text-shadow: 0 0 6px #06f6d7;
+  transition: all 0.2s ease;
+}
+
+.popup-card button:hover {
+  background: #06f6d7;
+  color: #000;
+}
+
+
+</style>
+</head>
+<body>
+<!-- ---------- loading ---------- -->
+<div id="loader">
+  <div class="loader-logo"></div>
+</div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <button class="menu-btn" id="menuToggle" aria-label="Buka menu">&#9776;</button>
+  <div class="title-top">WΛR3VIVE</div>
+  <div class="account-container" id="accountBtn" title="Akun">
+    <i class="fa-solid fa-user-circle"></i>
+  </div>
+</header>
+
+<!-- Account Modal -->
+<div class="account-modal" id="accountModal">
+  <div class="account-card glass-card">
+    <button class="close-btn" id="closeAccountModal">&times;</button>
+    <div class="roboface">
+      <i class="fa-solid fa-user-circle" style="font-size:80px;color:var(--accent)"></i>
+    </div>
+    <p><strong>Username:</strong> Tidak di ketahui</p>
+    <p><strong>Role:</strong> Member</p>
+    <button class="btn" id="logoutBtn">Logout</button>
+  </div>
+</div>
+
+<!-- ---------- lock modal ---------- -->
+
+
+<!-- ---------- sidebar ---------- -->
+<nav class="sidebar" id="sidebarMenu" aria-hidden="true">
+  <ul>
+    <li class="has-submenu">
+      <a href="javascript:void(0)" id="contactToggle"><i class="fa-solid fa-headset"></i> Contact Admin <i class="fa-solid fa-chevron-down" style="margin-left:auto;font-size:12px"></i></a>
+      <ul class="submenu" id="contactSubmenu">
+        <li><a href="https://wa.me/62887437102804" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a></li>
+        <li><a href="https://t.me/@RyouzZz" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i> Telegram</a></li>
+        <li><a href="https://instagram.com/" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i> Instagram</a></li>
+        <li><a href="https://youtube.com/@RyoOfficialX75" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i> YouTube</a></li>
+      </ul>
+    </li>
+    <li class="has-submenu">
+      <a href="javascript:void(0)" id="infoToggle"><i class="fa-solid fa-newspaper"></i> Info Website Terbaru <i class="fa-solid fa-chevron-down" style="margin-left:auto;font-size:12px"></i></a>
+      <ul class="submenu" id="infoSubmenu">
+        <li><a href="https://whatsapp.com/channel/0029Vb60HVTId7nR086dIo3x" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp Channel</a></li>
+      </ul>
+    </li>
+    <li class="has-submenu">
+      <a href="javascript:void(0)" id="jasaToggle"><i class="fa-solid fa-code"></i> Jasa Pembuatan Web <i class="fa-solid fa-chevron-down" style="margin-left:auto;font-size:12px"></i></a>
+      <ul class="submenu" id="jasaSubmenu">
+        <li><a href="https://wa.me/62887437102804" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a></li>
+        <li><a href="https://t.me/RyouzZz" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i> Telegram</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+<div class="overlay" id="overlay" aria-hidden="true"></div>
+
+<!-- ---------- content ---------- -->
+<div style="padding:24px 16px">
+  <div class="robot-box glass-card">
+    <div class="robot-face"><img src="aryo.jpg" alt="ARYO" style="max-height:100%;max-width:100%;border-radius:50%"></div>
+    <div class="robot-title-normal">Unband WhatsApp</div>
+  </div>
+
+  <label class="form-label" for="nomor">Nomor WhatsApp yang diblokir</label>
+  <input type="tel" id="nomor" class="input" placeholder="+62xxxxxxxxxxx" inputmode="tel" aria-required="true"/>
+  <label class="form-label" for="alasan">Pilih Opsi Band</label>
+<select id="alasan" class="input" aria-required="true">
+  <option value="">-- Pilih alasan --</option>
+  <option value="Opsi Spam">Spam</option>
+  <option value="Opsi Permanen">Permanen</option>
+  <option value="PERMANEN HARD">Hard</option>
+</select>
+
+<label class="form-label" for="emailTujuan">Pilih Email Tujuan</label>
+<select id="emailTujuan" class="input" aria-required="true">
+  <option value="">-- Pilih Email Tujuan --</option>
+  <option value="support@whatsapp.com">support@whatsapp.com</option>
+  <option value="smb@support.whatsapp.com">smb@support.whatsapp.com</option>
+  <option value="webclient_web@support.whatsapp.com">webclient_web@support.whatsapp.com</option>
+  <option value="iphone_support@whatsapp.com">iphone_support@whatsapp.com</option>
+  <option value="android_web@support.whatsapp.com">android_web@support.whatsapp.com</option>
+</select>
+
+  <button class="btn" id="sendBtn" aria-label="Kirim Banding">KIRIM BANDING</button>
+  <div class="status" id="statusArea" aria-live="polite"></div>
+  <div class="small">Saat tombol ditekan sistem akan membuka Gmail (Android). Kirim pesan lalu tunggu balasan WhatsApp.</div>
+</div>
+
+<!-- ---------- bottom nav ---------- -->
+<nav class="bottom-nav">
+  <a href="home.html">
+    <i class="fa-solid fa-house"></i>
+    <span>Home</span>
+  </a>
+  <a href="unband.html" class="active">
+    <i class="fa-brands fa-whatsapp"></i>
+    <span>Unband</span>
+  </a>
+ <a href="#" id="toolsNav">
+  <i class="fa-solid fa-toolbox"></i>
+  <span>Tools</span>
+</a>
+</nav>
+
+
+
+
+<script>
+
+const path = window.location.pathname.split("/").pop(); // ambil nama file
+document.querySelectorAll(".bottom-nav a").forEach(link => {
+  const file = link.getAttribute("href");
+  if (path === file) {
+    link.classList.add("active");
+  } else {
+    link.classList.remove("active");
+  }
+});
+
+
+/* ---------- loader 2 detik ---------- */
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('loader').style.opacity='0';
+    setTimeout(()=>document.getElementById('loader').style.display='none',600);
+  },2000);
+});
+
+/* ---------- getar + suara click pada SEMUA tombol ---------- */
+document.querySelectorAll('button, .btn, .status-btn, .tool-card, .close-btn, .logout-btn').forEach(el => {
+  el.addEventListener('click', () => {
+    // getar 10 ms (HP saja)
+    navigator.vibrate && navigator.vibrate(10);
+
+    // suara click kecil
+    const clickSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT');
+    clickSound.volume = 0.2;
+    clickSound.play();
+  });
+});
+/* ---------- form logic (tetap sama) ---------- */
+const sendBtn = document.getElementById('sendBtn');
+const statusEl = document.getElementById('statusArea');
+const nomorInput = document.getElementById('nomor');
+const alasanSelect = document.getElementById('alasan');
+const emailTujuan = document.getElementById('emailTujuan');
+
+
+function enc(v) { return encodeURIComponent(v || '') }
+function isAndroid() { return /Android/i.test(navigator.userAgent) }
+function setStatus(t) { statusEl.textContent = t }
+
+function normalizeNumber(n) {
+  if (!n) return n;
+  const s = n.trim().replace(/\s+/g, '');
+  if (/^[0][0-9]+$/.test(s)) return '62' + s.slice(1);
+  if (/^\+/.test(s)) return s;
+  return s;
+}
+
+function buildTemplate(nomor, alasan) {
+  const tampilNomor = (nomor.startsWith('+') || nomor.startsWith('62')) ? nomor : '+' + nomor;
+
+  if (alasan === "Opsi Permanen") {
+    // default (Permanen Fresh - Unban Request)
+return {
+  to: selectedEmail,
+  subject: '[WhatsApp Appeal] Request for Review of My Recently Blocked Account',
+  body: `Dear WhatsApp Support Team,\n\nI hope this message finds you well.\n\nI recently discovered that my WhatsApp account ([${tampilNomor}]) has been permanently blocked. I understand that account blocks are in place to protect the community, and I am reaching out to explain my situation without placing blame on the system.\n\nI want to clarify that I have always followed WhatsApp's rules and policies. My account is used solely for legitimate personal communication. Recently, I was sending wedding invitations to about 10 of my family members when my account was suddenly blocked for suspected spam. This unexpected block has caused significant distress as I am unable to communicate important information during this special time.\n\nI kindly request that you urgently review my case and consider restoring access to my account. Your prompt assistance would be greatly appreciated.\n\nThank you very much for your time, understanding, and support.\n\nSincerely,\n[Your Name]`
+    }
+  }
+
+  if (alasan === "PERMANEN HARD") {
+    // default (PERMANENT HARD - Unban Request)
+return {
+  to: selectedEmail,
+  subject: '[WhatsApp Appeal] Request for Review of My Permanently Blocked Account',
+  body: `Dear WhatsApp Support Team,\n\nI hope this message finds you well.\n\nI recently discovered that my WhatsApp account ([${tampilNomor}]) has been permanently blocked. I understand that account blocks are intended to protect the community, and I am reaching out to explain my situation without placing blame on the system.\n\nI want to clarify that I have always followed WhatsApp's rules and policies. This account is used solely for legitimate personal and professional communication.\n\nI kindly request that you review my account and consider restoring access. This account is essential for my daily communications, including important family and work matters, and the block has caused significant disruption. Your prompt assistance would be greatly appreciated.\n\nThank you very much for your time, understanding, and support.\n\nSincerely,\n[Your Name]`
+    }
+  }
+
+  // default Opsi Spam
+  // default (Spam - Unban Request)
+return {
+  to: selectedEmail,
+  subject: 'Request for Review of My WhatsApp Account',
+  body: `Dear WhatsApp Support Team,\n\nI hope this message finds you well.\n\nI recently discovered that my WhatsApp account has been blocked. I understand that account blocks are in place to protect users, and I am reaching out to clarify my situation without any intention to blame the system.\n\nI would like to emphasize that I have always followed WhatsApp's rules and policies. I have not engaged in any activity that violates your terms of service.\n\nI kindly request that you review my account and consider restoring access. Your assistance in this matter would be greatly appreciated.\n\nThank you very much for your time and support.\n\nSincerely,\n[Your Name]`
+  };
+}
+
+function buildIntentUrl(t) { return `intent://compose?to=${enc(t.to)}&subject=${enc(t.subject)}&body=${enc(t.body)}#Intent;scheme=mailto;package=com.google.android.gm;end` }
+function buildMailtoUrl(t) { return `mailto:${enc(t.to)}?subject=${enc(t.subject)}&body=${enc(t.body)}` }
+function buildGmailWebUrl(t) { return `https://mail.google.com/mail/?view=cm&fs=1&to=${enc(t.to)}&su=${enc(t.subject)}&body=${enc(t.body)}` }
+function buildTemplate(nomor, alasan, selectedEmail) {
+  const tampilNomor = (nomor.startsWith('+') || nomor.startsWith('62')) ? nomor : '+' + nomor;
+
+  if (alasan === "Opsi Permanen") {
+    // default (Permanen Fresh - Unban Request)
+return {
+  to: selectedEmail,
+  subject: '[WhatsApp Appeal] Request for Review of My Recently Blocked Account',
+  body: `Dear WhatsApp Support Team,\n\nI hope this message finds you well.\n\nI recently discovered that my WhatsApp account ([${tampilNomor}]) has been permanently blocked. I understand that account blocks are in place to protect the community, and I am reaching out to explain my situation without placing blame on the system.\n\nI want to clarify that I have always followed WhatsApp's rules and policies. My account is used solely for legitimate personal communication. Recently, I was sending wedding invitations to about 10 of my family members when my account was suddenly blocked for suspected spam. This unexpected block has caused significant distress as I am unable to communicate important information during this special time.\n\nI kindly request that you urgently review my case and consider restoring access to my account. Your prompt assistance would be greatly appreciated.\n\nThank you very much for your time, understanding, and support.\n\nSincerely,\n[Your Name]`
+    }
+  }
+
+  if (alasan === "PERMANEN HARD") {
+    // default (PERMANENT HARD - Unban Request)
+return {
+  to: selectedEmail,
+  subject: '[WhatsApp Appeal] Request for Review of My Permanently Blocked Account',
+  body: `Dear WhatsApp Support Team,\n\nI hope this message finds you well.\n\nI recently discovered that my WhatsApp account ([${tampilNomor}]) has been permanently blocked. I understand that account blocks are intended to protect the community, and I am reaching out to explain my situation without placing blame on the system.\n\nI want to clarify that I have always followed WhatsApp's rules and policies. This account is used solely for legitimate personal and professional communication.\n\nI kindly request that you review my account and consider restoring access. This account is essential for my daily communications, including important family and work matters, and the block has caused significant disruption. Your prompt assistance would be greatly appreciated.\n\nThank you very much for your time, understanding, and support.\n\nSincerely,\n[Your Name]`
+    }
+  }
+
+// default (Spam - Unban Request)
+return {
+  to: selectedEmail,
+  subject: 'Request for Review of My WhatsApp Account',
+  body: `Dear WhatsApp Support Team,\n\nI hope this message finds you well.\n\nI recently discovered that my WhatsApp account has been blocked. I understand that account blocks are in place to protect users, and I am reaching out to clarify my situation without any intention to blame the system.\n\nI would like to emphasize that I have always followed WhatsApp's rules and policies. I have not engaged in any activity that violates your terms of service.\n\nI kindly request that you review my account and consider restoring access. Your assistance in this matter would be greatly appreciated.\n\nThank you very much for your time and support.\n\nSincerely,\n[Your Name]`
+  };
+}
+
+function buildIntentUrl(t) { return `intent://compose?to=${enc(t.to)}&subject=${enc(t.subject)}&body=${enc(t.body)}#Intent;scheme=mailto;package=com.google.android.gm;end` }
+function buildMailtoUrl(t) { return `mailto:${enc(t.to)}?subject=${enc(t.subject)}&body=${enc(t.body)}` }
+function buildGmailWebUrl(t) { return `https://mail.google.com/mail/?view=cm&fs=1&to=${enc(t.to)}&su=${enc(t.subject)}&body=${enc(t.body)}` }
+
+sendBtn.addEventListener('click', () => {
+  let nomor = (nomorInput.value || '').trim();
+  const alasan = (alasanSelect.value || '').trim();
+  const selectedEmail = emailTujuan.value.trim();
+
+  if (!nomor || !alasan || !selectedEmail) {
+  // Hapus status lama
+  setStatus('');
+
+  // Buat elemen popup
+  const popup = document.createElement("div");
+  popup.style.position = "fixed";
+  popup.style.top = "50%";
+  popup.style.left = "50%";
+  popup.style.transform = "translate(-50%, -50%)";
+  popup.style.background = "rgba(15,15,25,0.9)";
+  popup.style.backdropFilter = "blur(10px)";
+  popup.style.border = "1px solid rgba(255,255,255,0.1)";
+  popup.style.borderRadius = "20px";
+  popup.style.padding = "25px";
+  popup.style.color = "#e6eef6";
+  popup.style.textAlign = "center";
+  popup.style.zIndex = "9999";
+  popup.style.width = "280px";
+  popup.style.boxShadow = "0 0 20px rgba(0,0,0,0.6)";
+  popup.innerHTML = `
+    <h3 style="margin-bottom:10px;font-family:var(--mono);color:var(--accent);">⚠️ Perhatian</h3>
+    <p style="font-size:14px;line-height:1.5;">Mohon isi nomor, pilih alasan, dan pilih email tujuan.</p>
+    <button id="closePopup" style="margin-top:15px;padding:8px 16px;border:none;border-radius:8px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:white;cursor:pointer;font-weight:600;">Oke</button>
+  `;
+
+  // Tambahkan ke body
+  document.body.appendChild(popup);
+
+  // Tutup popup
+  document.getElementById("closePopup").addEventListener("click", () => {
+    popup.remove();
+  });
+
+  // Efek getar + suara
+  navigator.vibrate && navigator.vibrate(40);
+  const sound = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAB9AAABABAAZGF0YQAAAAA=');
+  sound.play();
+
+  return;
+}
+
+
+  nomor = normalizeNumber(nomor);
+  const tpl = buildTemplate(nomor, alasan, selectedEmail);
+  const intentUrl = buildIntentUrl(tpl),
+        mailtoUrl = buildMailtoUrl(tpl),
+        gmailWebUrl = buildGmailWebUrl(tpl);
+
+  sendBtn.disabled = true;
+  sendBtn.setAttribute('aria-busy', 'true');
+
+  if (isAndroid()) {
+    setStatus('Mencoba membuka Gmail app...');
+    try { window.location.href = intentUrl } catch (e) { }
+    let handled = false;
+    const fallback = () => {
+      if (handled) return; handled = true;
+      setStatus('Gagal buka Gmail app. Membuka email default...');
+      try { window.location.href = mailtoUrl } catch (e) {
+        setStatus('Gagal buka app email. Membuka Gmail web...');
+        try { window.open(gmailWebUrl, '_blank') } catch (err) { setStatus('Gagal membuka opsi email.') }
+      }
+      sendBtn.disabled = false; sendBtn.removeAttribute('aria-busy');
+    };
+    const onVisChange = () => { if (document.hidden) { handled = true; setStatus('Compose terbuka di aplikasi Gmail.'); sendBtn.disabled = false; sendBtn.removeAttribute('aria-busy'); } };
+    document.addEventListener('visibilitychange', onVisChange, { once: true });
+    setTimeout(() => { if (!handled) fallback(); }, 1200);
+  } else {
+    setStatus('Membuka aplikasi email...');
+    try {
+      window.location.href = mailtoUrl;
+      setTimeout(() => {
+        if (!document.hidden) {
+          setStatus('Jika tidak terbuka, membuka Gmail web...');
+          try { const w = window.open(gmailWebUrl, '_blank'); if (!w) setStatus('Popup diblok. Periksa aplikasi email.'); } catch (e) { setStatus('Gagal membuka Gmail web.'); }
+        }
+        sendBtn.disabled = false; sendBtn.removeAttribute('aria-busy');
+      }, 900);
+    } catch (err) {
+      setStatus('Gagal membuka aplikasi email. Membuka Gmail web...');
+      try { window.open(gmailWebUrl, '_blank'); } catch (e) { setStatus('Gagal membuka Gmail web.'); }
+      sendBtn.disabled = false; sendBtn.removeAttribute('aria-busy');
+    }
+  }
+});
+
+
+
+/* ---------- sidebar handlers ---------- */
+document.getElementById('menuToggle').addEventListener('click',()=>{
+  document.getElementById('sidebarMenu').classList.toggle('active');
+  document.getElementById('overlay').classList.toggle('active');
+});
+document.getElementById('overlay').addEventListener('click',()=>{
+  document.getElementById('sidebarMenu').classList.remove('active');
+  document.getElementById('overlay').classList.remove('active');
+});
+document.getElementById('contactToggle').addEventListener('click',()=>{document.getElementById('contactSubmenu').classList.toggle('show')});
+document.getElementById('infoToggle').addEventListener('click',()=>{document.getElementById('infoSubmenu').classList.toggle('show')});
+document.getElementById('jasaToggle').addEventListener('click',()=>{document.getElementById('jasaSubmenu').classList.toggle('show')});
+
+// Account modal toggle
+const accountModal = document.getElementById('accountModal');
+const logoutBtn = document.getElementById('logoutBtn');
+
+accountBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  accountModal.classList.toggle('active');
+});
+
+// Tutup modal kalau klik di luar card
+accountModal.addEventListener('click', (e) => {
+  if (!e.target.closest('.account-card')) {
+    accountModal.classList.remove('active');
+  }
+});
+
+// Logout button
+logoutBtn.addEventListener('click', () => {
+  window.location.href = 'index.html';
+});
+const closeAccountModal = document.getElementById('closeAccountModal');
+
+closeAccountModal.addEventListener('click', () => {
+  accountModal.classList.remove('active');
+});
+
+// Nonaktifkan zoom pakai Ctrl + scroll atau Ctrl + (+/-)
+document.addEventListener('wheel', function(e) {
+  if (e.ctrlKey) e.preventDefault();
+}, { passive: false });
+
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '=')) ||
+      e.key === 'Meta') {
+    e.preventDefault();
+  }
+});
+
+document.getElementById("toolsNav").addEventListener("click", (e) => {
+  e.preventDefault();
+
+  // Overlay
+  const overlay = document.createElement("div");
+  overlay.className = "popup-overlay";
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add("active")); // fade in
+
+  // Popup
+  const toolsPopup = document.createElement("div");
+  toolsPopup.className = "popup-card";
+  toolsPopup.innerHTML = `
+    <h3>🧰 Tools</h3>
+    <p>Menu ini belum tersedia, masih dalam pengembangan.</p>
+    <button id="closeTools">Tutup</button>
+  `;
+  document.body.appendChild(toolsPopup);
+  requestAnimationFrame(() => toolsPopup.classList.add("active")); // fade in
+
+  // Tutup popup
+  const closePopup = () => {
+    toolsPopup.classList.remove("active");
+    overlay.classList.remove("active");
+    setTimeout(() => {
+      toolsPopup.remove();
+      overlay.remove();
+    }, 300); // tunggu animasi fade out
+  };
+
+  document.getElementById("closeTools").addEventListener("click", closePopup);
+  overlay.addEventListener("click", closePopup);
+  
+  // Drag
+  let isDragging = false, offsetX = 0, offsetY = 0;
+  toolsPopup.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    offsetX = e.clientX - toolsPopup.getBoundingClientRect().left;
+    offsetY = e.clientY - toolsPopup.getBoundingClientRect().top;
+    toolsPopup.style.transition = "none";
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (isDragging) {
+      toolsPopup.style.left = e.clientX - offsetX + "px";
+      toolsPopup.style.top = e.clientY - offsetY + "px";
+      toolsPopup.style.transform = "none";
+    }
+  });
+
+  document.addEventListener("mouseup", () => {
+    isDragging = false;
+    toolsPopup.style.transition = "all 0.2s ease";
+  });
+});
+
+
+// Ambil data dari localStorage
+const username = localStorage.getItem("username") || "Tidak diketahui";
+const role = localStorage.getItem("role") || "Member";
+
+// Tampilkan ke modal akun
+document.querySelector(".account-card p:nth-of-type(1)").innerHTML = `<strong>Username:</strong> ${username}`;
+document.querySelector(".account-card p:nth-of-type(2)").innerHTML = `<strong>Role:</strong> ${role}`;
+
+// 🔮 Solusi 2 — ubah tone warna animasi sesuai role
+if (role === "Premium") {
+  // Warna lebih berani untuk premium
+  document.documentElement.style.setProperty('--grad2', '#8e2de2'); // Ungu cerah
+  document.documentElement.style.setProperty('--accent', '#d67cff'); // Aksen pink muda
+  document.documentElement.style.setProperty('--accent2', '#b66bff');
+} else if (role === "Free") {
+  // Warna default / toska-ungu
+  document.documentElement.style.setProperty('--grad2', '#7c5cff');
+  document.documentElement.style.setProperty('--accent', '#06f6d7');
+  document.documentElement.style.setProperty('--accent2', '#7c5cff');
+}
+
+</script>
+</body>
+</html>
