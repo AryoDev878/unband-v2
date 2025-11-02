@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — WΛR3VIVE Access</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Inter',sans-serif;
+  background:radial-gradient(circle at top,#4b0082,#000);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  position:relative;
+  color:#fff;
+}
+
+/* Bintang animasi rapi dan responsif */
+#stars {
+  position: absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  overflow:hidden;
+  z-index:0;
+  pointer-events:none;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0;
+  animation: twinkle 3s infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% {opacity: 0;}
+  50% {opacity: 0.8;}
+}
+
+/* Container utama */
+.login-container{
+  position:relative;
+  z-index:1;
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(25px);
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,0.2);
+  padding:45px 35px;
+  width:90%;
+  max-width:400px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  text-align:center;
+  transition:all .3s ease;
+}
+.login-container:hover{
+  box-shadow:0 12px 40px rgba(168,85,247,0.5);
+  transform:translateY(-2px);
+}
+
+/* Logo */
+.logo-container {
+  margin-bottom: 25px;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* Rasio 16:9 */
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(138,43,226,0.6);
+}
+
+.video-wrapper video {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+  transition: 0.3s;
+}
+
+.video-wrapper video:hover {
+  transform: scale(1.05);
+}
+
+/* Judul */
+.form-title{
+  font-family:'Share Tech Mono',monospace;
+  font-size:24px;
+  color:#fff;
+  text-shadow:0 0 10px rgba(255,255,255,0.5);
+  margin-bottom:30px;
+}
+
+/* Input */
+.key-input{
+  width:100%;
+  padding:14px 18px;
+  border-radius:12px;
+  border:2px solid rgba(255,255,255,0.3);
+  background:rgba(255,255,255,0.08);
+  font-family:'Share Tech Mono';
+  font-size:16px;
+  color:#fff;
+  outline:none;
+  transition:.3s;
+}
+.key-input::placeholder{color:rgba(255,255,255,0.6);}
+.key-input:focus{
+  border-color:#a855f7;
+  box-shadow:0 0 18px rgba(168,85,247,0.7);
+}
+
+/* Tombol login */
+.login-btn{
+  width:100%;
+  padding:15px;
+  margin-top:15px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,#7e22ce,#9333ea);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  transition:.3s;
+}
+.login-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(147,51,234,0.4);
+}
+
+/* Status */
+.status-message{
+  margin-top:15px;
+  font-size:14px;
+  font-weight:500;
+  min-height:20px;
+}
+.error-message{color:#ff6b6b;text-shadow:0 0 10px rgba(255,107,107,0.8);}
+.loading-message{color:#a855f7;text-shadow:0 0 10px rgba(168,85,247,0.8);}
+@keyframes shake{0%,100%{transform:translateX(0);}10%,30%,50%,70%,90%{transform:translateX(-5px);}20%,40%,60%,80%{transform:translateX(5px);}}
+.shake{animation:shake .5s ease;}
+
+/* Tombol bawah */
+.copyright {
+  margin-top: 20px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85); /* tidak terlalu transparan, tetap jelas */
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 8px rgba(168,85,247,0.4);
+}
+.action-buttons{
+  margin-top:25px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.action-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  border:none;
+  border-radius:12px;
+  padding:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.3s;
+  color:#fff;
+}
+.free-btn{
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.3);
+}
+.free-btn:hover{
+  background:rgba(168,85,247,0.25);
+  transform:translateY(-2px);
+}
+.premium-btn{
+  background:linear-gradient(135deg,#c026d3,#7e22ce);
+  box-shadow:0 0 18px rgba(168,85,247,0.4);
+}
+.premium-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 30px rgba(192,38,211,0.6);
+}
+
+/* Popup */
+.popup-overlay{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.65);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:20;
+  backdrop-filter:blur(8px);
+}
+.popup{
+  background:rgba(30,0,50,0.92);
+  border:1px solid rgba(255,255,255,0.25);
+  border-radius:18px;
+  padding:30px 25px;
+  color:#fff;
+  text-align:center;
+  width:90%;
+  max-width:340px;
+  box-shadow:0 0 25px rgba(168,85,247,0.7);
+  animation:fadeIn .3s ease;
+}
+.popup h2{font-family:'Share Tech Mono';margin-bottom:10px;font-size:20px;}
+.popup p{font-size:15px;margin-bottom:15px;line-height:1.5;}
+.popup button{
+  padding:9px 22px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,#7e22ce,#9333ea);
+  color:#fff;
+  cursor:pointer;
+  font-weight:600;
+  transition:.3s;
+}
+.popup button:hover{opacity:0.9;transform:scale(1.05);}
+.popup input[type="file"]{
+  margin-top:10px;
+  color:#fff;
+  cursor:pointer;
+  background:rgba(255,255,255,0.1);
+  padding:8px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.2);
+}
+.tiktok-link{
+  color:#fff;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(255,255,255,0.1);
+  padding:8px 15px;
+  border-radius:10px;
+  margin-bottom:12px;
+  transition:.3s;
+}
+.tiktok-link:hover{
+  background:rgba(168,85,247,0.3);
+  transform:translateY(-2px);
+}
+#passwordDisplay{
+  margin-top:15px;
+  font-family:'Share Tech Mono';
+  font-size:18px;
+  color:#a855f7;
+  display:none;
+}
+@keyframes fadeIn{from{opacity:0;transform:scale(0.9);}to{opacity:1;transform:scale(1);}}
+
+/* Responsif */
+@media(max-width:480px){
+  .login-container{padding:30px 20px;max-width:90%;}
+  .form-title{font-size:20px;}
+  .popup{padding:25px 20px;}
+  .tiktok-link{font-size:14px;}
+}
+/* Progress Bar */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 15px;
+  display: none; /* disembunyikan dulu */
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #7e22ce, #9333ea, #a855f7);
+  border-radius: 10px;
+  transition: width 0.1s ease;
+  box-shadow: 0 0 15px rgba(168,85,247,0.6);
+  animation: shimmer 2s infinite linear;
+}
+
+/* Efek cahaya bergerak di progress */
+@keyframes shimmer {
+  0% {filter: brightness(1);}
+  50% {filter: brightness(1.4);}
+  100% {filter: brightness(1);}
+}
+
+/* Lockscreen full video */
+#lockscreen {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  background:#000;
+  z-index:50;
+  overflow:hidden;
+}
+
+#lockVideo {
+  position:absolute;
+  top:0; left:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:1;
+}
+
+/* Tombol masuk */
+#enterBtn {
+  position:relative;
+  z-index:2;
+  margin-bottom:50px;
+  padding:15px 30px;
+  font-size:18px;
+  font-weight:600;
+  color:#fff;
+  background: rgba(255, 255, 255, 0.216);
+  border:2px solid #0000007a;
+  border-radius:12px;
+  backdrop-filter:blur(5px);
+  cursor:pointer;
+  opacity:0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+
+#enterBtn.show {
+  opacity:1;
+  transform: translateY(0);
+}
+
+/* Tombol hover */
+#enterBtn:hover {
+  background: rgba(255, 255, 255, 0.7);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(82, 83, 82, 0.7);
+}
+
+
+</style>
+</head>
+<body>
+ <div id="stars"></div>
+<!-- LOCKSCREEN -->
+<div id="lockscreen">
+  <video autoplay muted loop playsinline id="lockVideo">
+    <source src="lockscreen.mp4" type="video/mp4">
+    Browser tidak mendukung video.
+  </video>
+  <button id="enterBtn">Masuk</button>
+</div>
+
+<!-- MAIN LOGIN (sembunyi dulu, isi login sama seperti script lama) -->
+<div class="login-container" id="mainLogin" style="display:none;">
+
+  <div class="logo-container">
+    <div class="video-wrapper">
+      <video autoplay loop muted playsinline>
+        <source src="joget.mp4" type="video/mp4">
+        Browser kamu tidak mendukung video.
+      </video>
+    </div>
+  </div>
+
+  <h1 class="form-title">WΛR3VIVE</h1>
+
+  <form id="loginForm">
+    <input type="password" id="keyInput" class="key-input" placeholder="Masukkan password..." required>
+    <button type="submit" class="login-btn"><span id="btnText">Login</span></button>
+    <div id="statusMessage" class="status-message"></div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </form>
+
+  <div class="action-buttons">
+    <button class="action-btn free-btn" id="freeBtn"><i class="fa-solid fa-unlock"></i> Akses Gratis</button>
+    <button class="action-btn premium-btn" id="buyBtn"><i class="fa-solid fa-crown"></i> Beli Akses Premium</button>
+  </div>
+
+  <p class="copyright">©2025 @RyouzZz</p>
+</div>
+
+<!-- Popup -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup" id="popupContent">
+    <h2>Akses Gratis</h2>
+    <p>Dukung kami dengan follow TikTok di bawah ini:</p>
+    <a href="https://www.tiktok.com/@ryoo_110" target="_blank" class="tiktok-link">
+      <i class="fa-brands fa-tiktok"></i> @ryoo_110
+    </a>
+    <p>Setelah follow, upload bukti (screenshot):</p>
+    <input type="file" id="proofInput" accept="image/*">
+    <p id="passwordDisplay">Password: FREE123</p>
+    <button id="closePopup">Tutup</button>
+  </div>
+</div>
+
+<script>
+// Tampilkan tombol masuk setelah 10 detik
+setTimeout(() => {
+  document.getElementById("enterBtn").classList.add("show");
+}, 10000);
+
+const enterBtn = document.getElementById("enterBtn");
+enterBtn.addEventListener("click", () => {
+  // sembunyikan lockscreen
+  document.getElementById("lockscreen").style.display = "none";
+  
+  // tampilkan login utama
+  document.getElementById("mainLogin").style.display = "block";
+  
+  // mulai musik
+  const music = document.getElementById("bgMusic");
+  music.muted = false;
+  music.play().catch(err => console.log("Autoplay diblokir:", err));
+});
+
+
+function createStars(num = 80){
+  const container = document.getElementById('stars');
+  container.innerHTML = ''; // hapus bintang lama
+  for(let i=0; i<num; i++){
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.width = star.style.height = (Math.random() * 2 + 1) + 'px';
+    star.style.animationDuration = (2 + Math.random() * 3) + 's';
+    star.style.opacity = Math.random() * 0.8 + 0.2;
+    container.appendChild(star);
+  }
+}
+createStars();
+
+
+const FREE_PASS="FREE123", PREMIUM_PASS="PREMIUM999";
+const loginForm=document.getElementById('loginForm');
+const keyInput=document.getElementById('keyInput');
+const statusMessage=document.getElementById('statusMessage');
+
+loginForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const val = keyInput.value.trim();
+  if (!val) return showError("Password tidak boleh kosong!");
+  
+  if (val === FREE_PASS || val === PREMIUM_PASS) {
+    showLoading("Login...");
+    startProgress(() => {
+      const role = (val === FREE_PASS) ? "Free" : "Premium";
+      localStorage.setItem("role", role);
+      localStorage.setItem("username", "Guest");
+      window.location.href = "home.html";
+    });
+  } else {
+    showError("Password salah!");
+  }
+});
+
+function showError(msg){
+  statusMessage.textContent=msg;
+  statusMessage.className="status-message error-message";
+  keyInput.classList.add("shake");
+  setTimeout(()=>keyInput.classList.remove("shake"),500);
+}
+function showLoading(msg){
+  statusMessage.textContent=msg;
+  statusMessage.className="status-message loading-message";
+}
+
+// Popup
+const popupOverlay=document.getElementById("popupOverlay");
+document.getElementById("freeBtn").addEventListener("click",()=>popupOverlay.style.display="flex");
+document.getElementById("closePopup").addEventListener("click",()=>popupOverlay.style.display="none");
+
+// Upload bukti follow
+document.getElementById("proofInput").addEventListener("change",()=>{
+  if(document.getElementById("proofInput").files.length>0){
+    document.getElementById("passwordDisplay").style.display="block";
+  }
+});
+
+// Tombol beli premium ke Telegram
+document.getElementById("buyBtn").addEventListener("click",()=>{
+  window.open("https://t.me/RyouzZz","_blank");
+});
+
+document.addEventListener("click", () => {
+  const music = document.getElementById("bgMusic");
+  if (music.paused) {
+    music.play().catch(err => console.log("Autoplay diblokir:", err));
+  }
+}, { once: true });
+
+function startProgress(callback){
+  const bar = document.querySelector('.progress-bar');
+  const fill = document.getElementById('progressFill');
+  bar.style.display = 'block';
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.random() * 8; // naik random biar natural
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(interval);
+      setTimeout(callback, 400);
+    }
+    fill.style.width = progress + "%";
+  }, 120);
+}
+
+
+</script>
+<audio id="bgMusic" src="sound.mp3" autoplay loop></audio>
+</body>
+</html>
